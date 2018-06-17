@@ -1,0 +1,15 @@
+<h1>{{title}}</h1>
+<h2>Hello hello hello</h2>
+
+<p>{{scene_text}}</p>
+
+<form action="/consequences" method="post">
+  {{#each choices}}
+    <label>
+      {{choice_text}}
+      <input type="radio" name="choice" value="{{choice_id}}">
+      <br>
+    </label>
+  {{/each}}
+  <input type="submit" value="Submit">
+</form>
