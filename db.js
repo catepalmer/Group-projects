@@ -4,8 +4,7 @@ const connection = require('knex')(config)
 
 module.exports = {
   getScene: getScene,
-  getChoice: getChoice,
-  getScenesNew: getScenesNew
+  getChoice: getChoice
 }
 
 function getScenes (testConn) {
@@ -23,7 +22,6 @@ function getScene (id, testConn) {
   })
 }
 
-
 function getChoice (choice, testConn) {
   const conn = testConn || connection
   let choice_id = choice.choice
@@ -34,42 +32,6 @@ function getChoice (choice, testConn) {
     return tidyChoice(untidyChoice)
   })
 }
-
-function getScenesNew (testConn) {
-  const conn = testConn || connection
-  return conn('scenes')
-    .join('choices', 'scenes.id', 'choices.scene_id')
-    .select('scenes.id as id', 'choices.choice_id', 'scenes.text as scene_text', 'choices.text as choice_text', 'scenes.title', 'scenes.next', 'scenes.image', 'choices.points', 'choices.consequences')
-    .then((untidy) => {
-      return tidyScenes(untidy)
-    })
-  }
-
-
-
-  function tidyScenes (untidy) {
-    let tidied = []
-    for (let i = 0; i < untidy.length; i++) {
-      tidied.push({})
-      tidied[i].id = untidy[i].id
-      tidied[i].scene_text = untidy[i].scene_text
-      tidied[i].title = untidy[i].title
-      tidied[i].image = untidy[i].image
-      tidied[i].choices = []
-      for (let j = 0; j < untidy.length; j++) {
-        let newChoice = {}
-        newChoice.choice_id = untidy[i].choice_id
-        newChoice.choice_text = untidy[i].choice_text
-        newChoice.next = untidy[i].next
-        newChoice.points = untidy[i].points
-        newChoice.consequences = untidy[i].consequences
-        tidied[i].choices.push(newChoice)
-      }
-    }
-    return tidied
-    }
-    
-
 
 function tidyChoice (untidyChoice) {
   let tidiedChoice = {}
